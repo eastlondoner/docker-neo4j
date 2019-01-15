@@ -103,6 +103,7 @@ docker_compose_up() {
   sed --in-place -e "s|image: .*|image: ${l_image}|g" "${l_composefile}"
   sed --in-place -e "s|container_name: core.*|container_name: ${l_cname}|g" "${l_composefile}"
   sed --in-place -e "s|container_name: read.*|container_name: ${l_rname}|g" "${l_composefile}"
+  sed --in-place -e "s|USER_INFO|$(id -u):$(id -g)|g" "${l_composefile}"
 
   echo "logs: ${l_composefile}.log"
 
@@ -209,4 +210,25 @@ uid_of() {
 
 gid_of() {
   stat -c %g "$1"
+}
+
+get_completed_container_output() {
+    # Gets the log output for a container that we want to run to completion
+    # also rms the container
+    local container_id="$1"; shift;
+    local output_file="$1"; shift;
+    local deadline="$((SECONDS+60))"
+    readonly deadline
+    while true; do
+        [[ "${SECONDS}" -ge "${deadline}" ]] && echo "timed out waiting for container to finish" && exit 1
+        sleep 1
+        # Wait until the container isn't running any more
+        if ! docker top "${container_id}" &> /dev/null; then
+
+            ( docker logs "${container_id}" || echo "no logs found" ) > "${output_file}.stdout" 2>"${output_file}.stderr"
+
+            docker rm "${container_id}" || echo "error removing container"
+            break
+        fi
+    done
 }
