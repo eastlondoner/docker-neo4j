@@ -8,6 +8,8 @@ services:
   core1:
     user: "USER_INFO"
     image: neo4j:3.1-enterprise
+    volumes:
+      - "LOGS_DIR/core1:/logs"
     container_name: core-placeholder
     networks:
       - lan
@@ -23,6 +25,8 @@ services:
   core2:
     user: "USER_INFO"
     image: neo4j:3.1-enterprise
+    volumes:
+      - "LOGS_DIR/core2:/logs"
     networks:
       - lan
     environment:
@@ -38,6 +42,8 @@ services:
   core3:
     user: "USER_INFO"
     image: neo4j:3.1-enterprise
+    volumes:
+      - "LOGS_DIR/core3:/logs"
     networks:
       - lan
     environment:
@@ -59,6 +65,8 @@ services:
     user: "USER_INFO"
     image: neo4j:3.1-enterprise
     container_name: read-placeholder
+    volumes:
+      - "LOGS_DIR/readreplica1:/logs"
     networks:
       - lan
     environment:
