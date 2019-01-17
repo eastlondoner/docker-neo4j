@@ -102,6 +102,7 @@ docker_compose_up() {
   local l_image="$1" l_composefile="$2" l_cname="$3" l_rname="$4"; logs_d="$5"; shift; shift; shift; shift;
 
   # Create the log directories. If we let docker create them then they will be owned by docker not our current user
+  # TODO: use some jq/yq magic to read out the volumes from the docker compose file
   mkdir --parents "${logs_d}/core1"
   mkdir --parents "${logs_d}/core2"
   mkdir --parents "${logs_d}/core3"
