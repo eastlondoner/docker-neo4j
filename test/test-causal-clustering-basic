@@ -103,11 +103,6 @@ readonly restore_output="${restore_logs_dir}/neo4j-admin"
 readonly restore_dir="$(mktemp --directory)"
 
 assert_restore_success() {
-    # if [[ "$(cat "${restore_output}" | wc -l)" -gt 1 ]]; then
-    #     cat "${restore_output}."*
-    #     echo "Unexpected output from restore operation"
-    #     exit 1
-    # fi
     if [[ "$(ls "${restore_dir}" | wc -l)" -lt 1 ]]; then
         cat "${restore_output}."*
         echo "No restore files found in restore directory ${restore_dir}"
@@ -124,6 +119,7 @@ restore_container="$(docker run -d \
                 --user="$(id -u):$(id -g)" \
                 --volume="${backup_dir}":/backup \
                 --volume="${restore_dir}":/data \
+                --volume="$(pwd)/${restore_logs_dir}":/logs \
                 --env=NEO4J_DEBUG=yes \
                 --env=NEO4J_ACCEPT_LICENSE_AGREEMENT=yes \
                 "${image}" neo4j-admin restore \

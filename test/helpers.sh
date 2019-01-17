@@ -235,6 +235,12 @@ get_completed_container_output() {
 
             ( docker logs "${container_id}" || echo "no logs found" ) > "${output_file}.stdout" 2>"${output_file}.stderr"
 
+            if [[ "$(docker inspect "${container_id}" --format='{{.State.ExitCode}}')" -ne 0 ]]; then
+                cat "${output_file}."*
+                echo "ERROR: container exited with an error code"
+                exit 1
+            fi
+
             docker rm "${container_id}" || echo "error removing container"
             break
         fi
