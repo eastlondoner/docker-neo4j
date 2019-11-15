@@ -60,13 +60,7 @@ public class TestPluginInstallation
     @BeforeAll
     public static void checkVersionIsCompatibleWithTest()
     {
-        // for some reason this test fails on versions ending in SNAPSHOT.
-        // Ignoring this test for versions ending in SNAPSHOT until it's fixed properly.
-        Assumptions.assumeFalse( NEO4J_VERSION.label.contains( "SNAPSHOT" ),
-                                 "Plugins test does not work for SNAPSHOT variants of NEO4J");
-
-        Assumptions.assumeFalse( NEO4J_VERSION.isAtLeastVersion( Neo4jVersion.NEO4J_VERSION_400 ),
-                                 "Plugin test currently does not work with 4.0");
+        // Should work for all versions
     }
 
     private void createContainerWithTestingPlugin()
